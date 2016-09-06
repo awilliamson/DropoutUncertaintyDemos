@@ -10,10 +10,7 @@
 		<script src="convnetjs/deepqlearn.js"></script>
 		<script src="convnetjs/npgmain.js"></script>
 		<script src="convnetjs/regression_uncertainty.js"></script>
-		<script src="convnetjs/rldemo_comparison.js"></script>
-		<style type="text/css">
-			canvas { border: 1px solid white; }
-		</style>
+		<script src="convnetjs/ashley_rldemo_comparison.js"></script>
 	</head>
 	<body style='font-family: Arial, "Times New Roman", Times, serif;'>
 		<h1>RL with dropout uncertainty demo</h1>
@@ -21,12 +18,15 @@
 			Deep reinforcement learning demo with two behavioural policies: epsilon greedy (green), and Thompson sampling using dropout uncertainty (blue). The agents (blue and green discs) are rewarded for eating red things and walking straight, and penalised for eating yellow things and walking into walls. Both agents move at random for the first 3000 moves (the red shade in the graph). The $X$ axis of the plot shows the number of batches divided by 500 on log scale and the $Y$ axis shows average reward. (The code seems to work quickest on Chrome).
 		</p>
 		<p>
-	    <div style="margin-left: auto; margin-right: auto; width: 700px">
-	   		<canvas class="12u" id="graph_canvas" width="700" height="150" style="background-image:url('images/rl_screenshot_2_graph.jpg'); background-size: cover; opacity:0.4"></canvas>
-	   		<canvas class="12u" id="canvas" width="700" height="500" style="background-image:url('images/rl_screenshot_2_main.jpg'); background-size: cover; opacity:0.4"></canvas>
+	    <div style="margin-left: auto; margin-right: auto; width: 900px">
+	   		<canvas class="12u" id="graph_canvas" width="900" height="250" style="background-image:url('images/rl_screenshot_2_graph.jpg'); background-size: cover; opacity:0.4"></canvas>
+
+	   		<canvas class="6u" id="canvas_1" width="450" height="321" style="background-image:url('images/rl_screenshot_2_main.jpg'); background-size: cover; opacity:0.4"></canvas>
+			<canvas class="6u" id="canvas_2" width="450" height="321" style="background-image:url('images/rl_screenshot_2_main.jpg'); background-size: cover; opacity:0.4; float: right;"></canvas>
    		</div>
 			<ul>
 				<li><a href="javascript:show_rl()" class="button special">Start</a></li>
+				<li><a href="javascript:gonormal()" class="button alt" alt="Draw after every batch" title="Draw after every batch">Go normal</a></li>
 				<li><a href="javascript:gofast()" class="button alt" alt="Draw after every batch" title="Draw after every batch">Go fast</a></li>
 				<li><a href="javascript:goveryfast()" class="button alt" alt="Draw every 500 batches" title="Draw every 500 batches">Go very fast</a></li>
 				<li><a href="javascript:hide_rl()" class="button">Stop</a></li>
@@ -55,7 +55,7 @@ layer_defs.push({type:'fc', num_neurons: 50, activation:'relu'});
 layer_defs.push({type:'regression', num_neurons:num_actions});
 
 // options for the Temporal Difference learner that trains the above net
-// by backpropping the temporal difference learning rule.
+// by backpropping the temporal difference learning ruleStart.
 var tdtrainer_options = {learning_rate:0.001, momentum:0.0, batch_size:64, l2_decay:0.01};
 
 var opt = {};
@@ -118,15 +118,20 @@ var brain = new deepqlearn.Brain(num_inputs, num_actions, opt); // woohoo
 	    show_rl = function() {
 	    	$(graph_canvas).css('opacity', 1); 
 	    	$(graph_canvas).css('background-image', ''); 
-	    	$('canvas#canvas').css('opacity', 1); 
-	    	$('canvas#canvas').css('background-image', ''); 
-	    	start();
+	    	$('canvas#canvas_1').css('opacity', 1);
+	    	$('canvas#canvas_1').css('background-image', '');
+			$('canvas#canvas_2').css('opacity', 1);
+			$('canvas#canvas_2').css('background-image', '');
+
+			start();
 	    };
 	    hide_rl = function() {
 	    	$(graph_canvas).css('opacity', 0.4); 
 	    	$(graph_canvas).css('background-image', 'url("images/rl_screenshot_2_graph.jpg")'); 
-	    	$('canvas#canvas').css('opacity', 0.4); 
-	    	$('canvas#canvas').css('background-image', 'url("images/rl_screenshot_2_main.jpg")'); 
+	    	$('canvas#canvas_1').css('opacity', 0.4);
+	    	$('canvas#canvas_1').css('background-image', 'url("images/rl_screenshot_2_main.jpg")');
+			$('canvas#canvas_2').css('opacity', 0.4);
+			$('canvas#canvas_2').css('background-image', 'url("images/rl_screenshot_2_main.jpg")');
 	    	stop();
 	    };
 	</script>
